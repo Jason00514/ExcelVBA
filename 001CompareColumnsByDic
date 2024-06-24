@@ -1,0 +1,142 @@
+setting:tools(menu) >reference>Microsoft Scripting Runtime
+'**********************************************************
+'Compare two columns data 
+'D:before data / AE: new data
+'**********************************************************
+
+'standard moudle
+'--------------------------------------------
+Option Explicit
+
+'============================
+'Put column D into a dictionary. If there is a duplicate row, mark it in column B.
+'Loop through column AE, find the different row, and mark it in column AZ.
+'First data row is 11.
+'=============================
+Sub psDicBeforeSearchAfter()
+    Dim i As Long
+    Dim j As Long
+    'Dim lc As Long
+    Dim fr As Long
+    Dim lr As Long
+    Dim sKey As String
+    'Dim sValue As String
+    
+    Dim dic As Dictionary
+
+   'Prepare directory and mark duplicated row for before data.
+    Set dic = New Dictionary
+    fr = 11
+    lr = Cells(Rows.Count, "D").End(xlUp).Row
+    For i = fr To lr
+        sKey = Trim(Cells(i, "D"))
+        If dic.Exists(sKey) = False Then
+            Call dic.Add(sKey, i)
+        Else
+            Cells(i, 2).Value = "duplate with " & dic(sKey)
+        End If
+    Next i
+
+    'Loop through new data.
+    fr=11
+    lr = Cells(Rows.Count, "AE").End(xlUp).Row
+    j = 0
+    For i = fr To lr
+        sKey = Trim(Cells(i, "AE"))
+        If dic.Exists(sKey) = False Then
+            Cells(i, "AZ") = "〇"
+            j = j + 1
+        Else
+            Cells(i, "AZ") = ""
+        End If
+    Next i
+    
+    If j = 0 Then
+        MsgBox "追加されたファイルはなし。"
+    Else
+        MsgBox j & "ファイルが追加された。"
+    End If
+    
+End Sub
+
+'============================
+'Put column AE into a dictionary. If there is a duplicate row, mark it in column AB.
+'Loop through column D, find the different row, and mark it in column Y.
+'First data row is 11.
+'=============================
+Sub psDicAfterSearchBefore()
+    Dim i As Long
+    Dim j As Long
+    'Dim lc As Long
+    Dim fr As Long
+    Dim lr As Long
+    Dim sKey As String
+    'Dim sValue As String
+    
+    Dim dic As Dictionary
+
+    'Prepare directory and mark duplicated row for new data.
+    Set dic = New Dictionary
+    fr = 11
+    lr = Cells(Rows.Count, "AE").End(xlUp).Row
+    For i = fr To lr
+        sKey = Trim(Cells(i, "AE"))
+        If dic.Exists(sKey) = False Then
+            Call dic.Add(sKey, i)
+        Else
+            Cells(i, "AB").Value = "duplate with " & dic(sKey)
+        End If
+    Next i
+
+    'Loop through befor data.
+    fr = 11
+    lr = Cells(Rows.Count, "D").End(xlUp).Row
+    j=0
+    For i = fr To lr
+        sKey = Trim(Cells(i, "D"))
+        If dic.Exists(sKey) = False Then
+            Cells(i, "Y") = "〇"
+            j = j + 1
+        Else
+            Cells(i, "Y") = ""
+        End If
+    Next i
+    
+    If j = 0 Then
+        MsgBox "削除されたファイルはなし。"
+    Else
+        MsgBox j & "ファイルが削除された。"
+    End If
+End Sub
+
+'============================
+'clear data of B-D columns, first data row is 11
+'=============================
+Sub psClearBefore()
+    'Dim i As Long
+    Dim fr As Long
+    Dim lr As Long
+
+    fr = 11
+    lr = Cells(Rows.Count, "D").End(xlUp).Row
+    If lr < 11 Then
+        lr = fr
+    End If
+    range(Cells(11, "B"), Cells(lr, "Z")).ClearContents
+End Sub
+
+'============================
+'clear data of AC-BA columns, first data row is 11
+'=============================
+Sub psClearAfter()
+    'Dim i As Long
+    Dim fr As Long
+    Dim lr As Long
+
+    fr = 11
+    lr = Cells(Rows.Count, "AE").End(xlUp).Row
+    If lr < 11 Then
+        lr = fr
+    End If
+    range(Cells(11, "AC"), Cells(lr, "BA")).ClearContents
+End Sub
