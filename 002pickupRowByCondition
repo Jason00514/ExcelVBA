@@ -1,0 +1,42 @@
+Option Explicit
+'============================
+'Loop through column BJ of the 'all' sheet, pick up the data, and put it into the 'result' sheet.
+'The result is "DB01"."Tabale01"
+'=============================
+Sub psTableList()
+    Dim i As Long
+    Dim j As Long
+
+    Dim fr As Long
+    Dim lr As Long
+
+    Dim sValue As String
+    
+    Dim sSheetAll As String
+    Dim sSheetResult As String
+    
+    On Error GoTo Err_Handle
+    
+    sSheetResult = "result"
+    sSheetAll = "all"
+    
+    Sheets(sSheetAll).Select
+    fr = 9
+    lr = Cells(Rows.Count, "A").End(xlUp).Row
+  
+    j = 0
+    For i = fr To lr
+        If Val(Cells(i, "BJ")) > 0 Then
+            j = j + 1
+            sValue = """DB01"".""" & Trim(Cells(i, "C")) & """"
+            'Cells(i, "BM") = sValue
+            With Sheets(sSheetResult)
+                .Cells(j, "A").Value = sValue
+            End With
+        End If
+    Next i
+    
+    Exit Sub
+Err_Handle:
+    MsgBox Err.Description
+End Sub
