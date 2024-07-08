@@ -1,0 +1,51 @@
+'In Perl, create a file named perl01.pm. The first line in perl01.pm should be package perl01;.
+'# perl01.pm
+'package perl01;
+'
+'use strict;
+'use warnings;
+
+
+
+
+'Below is a VBA code example that opens a text file, 
+'searches for the keyword "package," 
+'and returns the row containing the keyword. 
+'It closes the file as soon as the keyword is found.
+
+Sub FindKeywordInTextFile()
+    Dim filePath As String
+    Dim fileNumber As Integer
+    Dim textLine As String
+    Dim rowNumber As Long
+    
+    ' Specify the path to the text file
+    filePath = "C:\path\to\your\file.txt"
+    
+    ' Get a free file number
+    fileNumber = FreeFile
+    
+    ' Open the text file for reading
+    Open filePath For Input As fileNumber
+    
+    ' Initialize row number
+    rowNumber = 0
+    
+    ' Loop through each line of the file
+    Do While Not EOF(fileNumber)
+        Line Input #fileNumber, textLine
+        rowNumber = rowNumber + 1
+        
+        ' Check if the keyword "package" is in the current line
+        If InStr(1, textLine, "package", vbTextCompare) > 0 Then
+            ' Keyword found, close the file and return the row number
+            MsgBox "Keyword 'package' found in row " & rowNumber & ": " & textLine
+            Close #fileNumber              'change here to row No.1; exit do  row No.2 FindKeywordInTextFile=rowNumber & "|" & textLine '
+            Exit Sub
+        End If
+    Loop
+    
+    ' Close the file if keyword not found
+    Close #fileNumber
+    MsgBox "Keyword 'package' not found in the file."
+End Sub
